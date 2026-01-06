@@ -101,15 +101,8 @@ def reset_sequence():
     flash('ID sequence reset', 'success')
     return redirect(url_for('index'))
 
-# Initialize DB at startup in a way compatible with different Flask versions
-if hasattr(app, 'before_serving'):
-    @app.before_serving
-    def ensure_db():
-        init_db()
-else:
-    @app.before_first_request
-    def ensure_db():
-        init_db()
+# Initialize DB immediately so it's present for import-time usage (safe & idempotent)
+init_db()
 
 if __name__ == '__main__':
     # Useful for local development; respect PORT env var if set (Render provides it)
