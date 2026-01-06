@@ -101,7 +101,14 @@ def reset_sequence():
     flash('ID sequence reset', 'success')
     return redirect(url_for('index'))
 
-if __name__ == '__main__':
+# Ensure DB is initialized before the first request (works with Gunicorn/Render)
+@app.before_first_request
+def ensure_db():
     init_db()
-    app.run(debug=True)
+
+if __name__ == '__main__':
+    # Useful for local development; respect PORT env var if set (Render provides it)
+    init_db()
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=True)
 
