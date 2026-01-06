@@ -101,8 +101,8 @@ def reset_sequence():
     flash('ID sequence reset', 'success')
     return redirect(url_for('index'))
 
-# Ensure DB is initialized before the first request (works with Gunicorn/Render)
-@app.before_first_request
+# Ensure DB is initialized before the server starts (Flask 3 uses before_serving)
+@app.before_serving
 def ensure_db():
     init_db()
 
